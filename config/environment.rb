@@ -40,6 +40,8 @@ Rails::Initializer.run do |config|
   # config.i18n.default_locale = :de
   config.gem 'haml'
   config.gem "searchlogic", :version => ">=2.3.8"
+  config.gem 'configatron', :lib => 'configatron'
+  config.gem 'pit', :lib => "pit"
   config.gem "oauth"
   config.gem "oauth-plugin"
 end

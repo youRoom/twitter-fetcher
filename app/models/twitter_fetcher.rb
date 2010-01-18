@@ -1,4 +1,6 @@
 require "httparty"
+require 'oauth'
+require 'json'
 
 class TwitterFetcher < ActiveRecord::Base
 
@@ -51,18 +53,18 @@ class TwitterFetcher < ActiveRecord::Base
 #    end
 #  end
 #
-#  def self.fetch_all
-#    self.all.each do |tf|
-#      logger.info " >> fetching #{tf.setting_option.inspect} #{tf.attributes.inspect}"
-#      items = tf.fetch
-#      logger.info " >> items: #{items.size}"
-#      entries = tf.create_entries
-#      logger.info " >> entries: #{entries.size}"
-#      logger.info " >> finished #{tf.setting_option.inspect}"
-#    end
-#  ensure
-#    logger.flush
-#  end
+  def self.fetch_all
+    self.all.each do |tf|
+      logger.info " >> fetching #{tf.setting_option.inspect} #{tf.attributes.inspect}"
+      items = tf.fetch
+      logger.info " >> items: #{items.size}"
+      entries = tf.create_entries
+      logger.info " >> entries: #{entries.size}"
+      logger.info " >> finished #{tf.setting_option.inspect}"
+    end
+  ensure
+    logger.flush
+  end
 #
 #  def setting_option_to_s
 #    "[#{setting_option[:type]}: #{setting_option[:value]}]"
@@ -80,15 +82,34 @@ class TwitterFetcher < ActiveRecord::Base
   def create_entries
     ActiveRecord::Base.transaction do
       each_tweet do |content, img_url, name, url|
-        puts '============================================================'
-        puts 'create:' + content
-        puts '============================================================'
-        # TODO ここをoauthに
-#        entry = participation.entries.create!(:content => content)
-#        entry.create_attachment(:data => { :user => { :img_url => img_url, :name => name}, :url => url }, :attachment_type => "twitter")
-        # entry
-      end
+        response = post_entry(content, img_url, name, url)
+        if response.code == '201'
+          JSON::parse(response.body)['entry']
+        end
+      end.compact! || []
     end
+  end
+
+  def post_entry content, img_url, name, url
+    access_token.post "#{target_group_url}/entries.json", {
+      'entry[content]' => content,
+      'entry[attachment_attributes][data][user][img_url]' => img_url,
+      'entry[attachment_attributes][data][user][name]' => name,
+      'entry[attachment_attributes][data][url]' => url,
+      'entry[attachment_attributes][attachment_type]' => 'twitter'
+    }
+  end
+
+  def access_token
+    @access_token ||= OAuth::AccessToken.new(consumer, configatron.access_token.key, configatron.access_token.secret)
+  end
+
+  def consumer
+   @consumer ||= OAuth::Consumer.new(configatron.consumer.key, configatron.consumer.secret, :site => "http://#{configatron.url_options[:host]}:#{configatron.url_options[:port]}")
+  end
+
+  def target_group_url
+   "http://r#{self.group_id}.#{configatron.url_options[:host]}:#{configatron.url_options[:port]}"
   end
 
   def each_tweet(&block)
