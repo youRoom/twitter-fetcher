@@ -1,0 +1,14 @@
+#container #main {
+  overflow: hidden; }
+
+ul.entries {
+  list-style-position: outside; }
+
+.comments .operations {
+  height: 1em; }
+
+.entry .content_wrapper .actions {
+  height: 1em; }
+
+#entries .new .current_user .edit {
+  visibility: visible; }

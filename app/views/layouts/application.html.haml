@@ -1,0 +1,18 @@
+!!!
+%html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", 'xml:lang' => "en" }
+  %head
+    %title youRoom TwitterFetcher
+    = render :partial => 'layouts/meta'
+    = render :partial => 'layouts/stylesheets_include'
+
+  %body.with_image
+    = render :partial => 'layouts/flash_message'
+
+    #container.ui-corner-all
+      = yield
+    = render :partial => 'layouts/footer'
+    = render :partial => 'layouts/javascript_include'
+    :javascript
+      $(function(){
+        #{yield :javascript_initializers}
+      })

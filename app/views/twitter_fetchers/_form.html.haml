@@ -1,0 +1,15 @@
+= form.error_messages
+
+%p
+  = form.label :setting_type, "Type"
+  %br
+  = form.radio_button :setting_type, "keyword"
+  = form.label :setting_type_keyword, "Keyword"
+  = form.radio_button :setting_type, "user"
+  = form.label :setting_type_user, "User"
+
+%p
+  = form.label :setting_value, "Target key word / Twitter user name"
+  %br
+  = form.text_field :setting_value
+

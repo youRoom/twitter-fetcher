@@ -1,0 +1,7 @@
+%h1
+  New twitter fetching methods
+
+- form_for(@fetcher, :url => group_twitter_fetchers_path(params[:group_id])) do |f|
+  = render f
+  %p
+    = f.submit "Create"

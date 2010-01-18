@@ -1,0 +1,23 @@
+%h2
+  Twitter Fetch Settings
+
+.list_wrapper
+  %table.list
+    %thead
+      %tr
+        %th
+          type
+        %th
+          user / keyword
+        %th
+    %tbody
+      - @fetchers.each do |fetcher|
+        %tr
+          %td
+            = h fetcher.setting_option[:type]
+          %td
+            = h fetcher.setting_option[:value]
+          %td
+            = link_to "Destroy", group_twitter_fetcher_path(params[:group_id], fetcher), :method => :delete
+.margin1em
+  = link_to "Add conditions", new_group_twitter_fetcher_path(params[:group_id])
