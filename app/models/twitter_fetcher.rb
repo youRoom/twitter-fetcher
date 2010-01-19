@@ -109,7 +109,11 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def target_group_url
-   "http://r#{self.group_id}.#{configatron.url_options[:host]}:#{configatron.url_options[:port]}"
+    self.class.youroom_group_url self.group_id
+  end
+
+  def self.youroom_group_url group_id
+   "http://r#{group_id}.#{configatron.url_options[:host]}:#{configatron.url_options[:port]}"
   end
 
   def each_tweet(&block)
