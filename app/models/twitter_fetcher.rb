@@ -102,7 +102,7 @@ class TwitterFetcher < ActiveRecord::Base
   def items
     @items ||= if @response.is_a?(Hash)
                  @response["results"]
-               else
+               elsif @response.is_a?(Array)
                  @response
                end || []
   end
