@@ -40,6 +40,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize?
+    # TODO 毎回youroom側にアクセスしないと認証出来ないのは微妙かも。利用者が少ないだろうし問題ないか?
     res = access_token.get "http://r#{params[:group_id]}.#{configatron.url_options[:host]}:#{configatron.url_options[:port]}/participations/current_participation.json"
     case res
     when Net::HTTPSuccess

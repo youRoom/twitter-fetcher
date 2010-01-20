@@ -4,13 +4,9 @@ require 'json'
 
 class TwitterFetcher < ActiveRecord::Base
 
-#  @@fetch_user = User.find_by_email configatron.twitter_fetcher_email
-#  cattr_reader :fetch_user
-#
-#  FETCH_USER_NAME = "TwitterFetcher"
   USER_AGENT = "youRoom twitter fetcher"
   URL_FORMAT = "http://twitter.com/%s/status/%s"
-#
+
   attr_accessor :setting_type, :setting_value
 
   validates_presence_of :setting_type, :setting_value
@@ -24,35 +20,10 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def after_create
-#    if group
-#      self.join_group
-      self.fetch
-      self.create_entries
-#    end
+    self.fetch
+    self.create_entries
   end
-#
-#  def after_destroy
-#    leave_group
-#  end
-#
-#  # TODO: UNJOINEDになった場合はUNJOINEDになったまま直した方が良いか?
-#  def join_group
-#    unless self.group.users.include?(self.class.fetch_user)
-#      part = self.class.fetch_user.join(self.group, :active)
-#      part.without_join_validation = true
-#      part.build_profile_values_only_name = FETCH_USER_NAME
-#      part.build_picture.fill_attr(fetch_user_picture)
-#      part.save!
-#    end
-#    part
-#  end
-#
-#  def leave_group
-#    if group.twitter_fetchers(false).empty?
-#      participation.be_leaved!
-#    end
-#  end
-#
+
   def self.fetch_all
     self.all.each do |tf|
       logger.info " >> fetching #{tf.setting_option.inspect} #{tf.attributes.inspect}"
@@ -65,11 +36,7 @@ class TwitterFetcher < ActiveRecord::Base
   ensure
     logger.flush
   end
-#
-#  def setting_option_to_s
-#    "[#{setting_option[:type]}: #{setting_option[:value]}]"
-#  end
-#
+
   def fetch
     get
     unless items.blank?
@@ -200,13 +167,4 @@ class TwitterFetcher < ActiveRecord::Base
       @response.first["id"]
     end
   end
-#
-#  def participation
-#    @participation ||= self.group.participation(self.class.fetch_user)
-#  end
-#
-#  def fetch_user_picture
-#    fetch_user.participations.first.picture
-#  end
-#
 end
