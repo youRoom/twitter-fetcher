@@ -1,5 +1,3 @@
-require "httparty"
-require 'oauth'
 require 'json'
 
 class TwitterFetcher < ActiveRecord::Base
@@ -9,7 +7,7 @@ class TwitterFetcher < ActiveRecord::Base
 
   attr_accessor :setting_type, :setting_value
 
-  validates_presence_of :setting_type, :setting_value
+  validates_presence_of :setting_type, :setting_value, :access_token, :access_token_secret
 
   serialize :setting_option
 
@@ -58,21 +56,13 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def post_entry content, img_url, name, url
-    access_token.post "#{target_group_url}/entries.json", {
+    access_token_as_youroom_bot.post "#{target_group_url}/entries.json", {
       'entry[content]' => content,
       'entry[attachment_attributes][data][user][img_url]' => img_url,
       'entry[attachment_attributes][data][user][name]' => name,
       'entry[attachment_attributes][data][url]' => url,
       'entry[attachment_attributes][attachment_type]' => 'twitter'
     }
-  end
-
-  def access_token
-    @access_token ||= OAuth::AccessToken.new(consumer, configatron.access_token.key, configatron.access_token.secret)
-  end
-
-  def consumer
-   @consumer ||= OAuth::Consumer.new(configatron.consumer.key, configatron.consumer.secret, :site => "http://#{configatron.url_options[:host]}:#{configatron.url_options[:port]}")
   end
 
   def target_group_url
@@ -96,7 +86,9 @@ class TwitterFetcher < ActiveRecord::Base
   def get
     logger.info " >> url: #{url}"
     logger.info " >> query: #{query.inspect}"
-    @response = HTTParty.get(url, :query => self.query, :format => :json, :headers => {'User-Agent' => USER_AGENT})
+    oauth = Twitter::OAuth.new(configatron.twitter.consumer.key, configatron.twitter.consumer.secret)
+    oauth.authorize_from_access(self.access_token, self.access_token_secret)
+    @response = Twitter::Request.get(oauth, url, :query => self.query, :format => :json, :headers => {'User-Agent' => USER_AGENT})
   end
 
   def items
@@ -166,5 +158,14 @@ class TwitterFetcher < ActiveRecord::Base
     else
       @response.first["id"]
     end
+  end
+
+  private
+  def access_token_as_youroom_bot
+    @access_token_as_youroom_bot ||= OAuth::AccessToken.new(youroom_consumer, configatron.youroom.access_token.key, configatron.youroom.access_token.secret)
+  end
+
+  def youroom_consumer
+    @youroom_consumer ||= OAuth::Consumer.new(configatron.youroom.consumer.key, configatron.youroom.consumer.secret, :site => "http://#{configatron.url_options[:host]}:#{configatron.url_options[:port]}")
   end
 end

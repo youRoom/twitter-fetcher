@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100118020753) do
+ActiveRecord::Schema.define(:version => 20100121055041) do
 
   create_table "twitter_fetchers", :force => true do |t|
     t.integer  "group_id"
@@ -17,6 +17,8 @@ ActiveRecord::Schema.define(:version => 20100118020753) do
     t.string   "since_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "access_token"
+    t.string   "access_token_secret"
   end
 
 end

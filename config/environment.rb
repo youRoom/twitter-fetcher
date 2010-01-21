@@ -44,4 +44,5 @@ Rails::Initializer.run do |config|
   config.gem 'pit', :lib => "pit"
   config.gem "oauth"
   config.gem "oauth-plugin"
+  config.gem 'twitter'
 end

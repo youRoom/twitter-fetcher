@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
 
   def require_login
     if session[:access_token].blank?
-      redirect_to verify_group_oauth_url(params[:group_id])
+      redirect_to verify_youroom_group_oauth_url(params[:group_id])
       return
     else
       return true if authorize?
@@ -41,13 +41,13 @@ class ApplicationController < ActionController::Base
 
   def authorize?
     # TODO 毎回youroom側にアクセスしないと認証出来ないのは微妙かも。利用者が少ないだろうし問題ないか?
-    res = access_token.get "http://r#{params[:group_id]}.#{configatron.url_options[:host]}:#{configatron.url_options[:port]}/participations/current_participation.json"
+    res = access_token_as_youroom_user.get "http://r#{params[:group_id]}.#{configatron.url_options[:host]}:#{configatron.url_options[:port]}/participations/current_participation.json"
     case res
     when Net::HTTPSuccess
       participation = JSON.parse(res.body)['participation']
       if participation &&  participation['admin']
-        session[:access_token] = access_token.token
-        session[:access_token_secret] = access_token.secret
+        session[:access_token] = access_token_as_youroom_user.token
+        session[:access_token_secret] = access_token_as_youroom_user.secret
         return true
       else
         reset_session
@@ -57,14 +57,14 @@ class ApplicationController < ActionController::Base
     reset_session
   end
 
-  def consumer
-    @consumer ||= OAuth::Consumer.new(configatron.consumer.key, configatron.consumer.secret, :site => "http://#{configatron.url_options[:host]}:#{configatron.url_options[:port]}")
+  def youroom_consumer
+    @youroom_consumer ||= OAuth::Consumer.new(configatron.youroom.consumer.key, configatron.youroom.consumer.secret, :site => "http://#{configatron.url_options[:host]}:#{configatron.url_options[:port]}")
   end
 
-  def access_token
-    @access_token ||=
+  def access_token_as_youroom_user
+    @access_token_as_youroom_user ||=
       if session[:access_token]
-        OAuth::AccessToken.new(consumer, session[:access_token], session[:access_token_secret])
+        OAuth::AccessToken.new(youroom_consumer, session[:access_token], session[:access_token_secret])
       else
         request_token = OAuth::RequestToken.new(consumer, session[:request_token], session[:request_token_secret])
         request_token.get_access_token({}, :oauth_token => params[:oauth_token], :oauth_verifier => params[:oauth_verifier])
