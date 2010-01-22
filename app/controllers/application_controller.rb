@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
       if session[:access_token]
         OAuth::AccessToken.new(youroom_consumer, session[:access_token], session[:access_token_secret])
       else
-        request_token = OAuth::RequestToken.new(consumer, session[:request_token], session[:request_token_secret])
+        request_token = OAuth::RequestToken.new(youroom_consumer, session[:request_token], session[:request_token_secret])
         request_token.get_access_token({}, :oauth_token => params[:oauth_token], :oauth_verifier => params[:oauth_verifier])
       end
   end

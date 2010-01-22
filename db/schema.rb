@@ -9,7 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100121055041) do
+ActiveRecord::Schema.define(:version => 20100122013506) do
+
+  create_table "post_histories", :force => true do |t|
+    t.integer  "twitter_fetcher_id"
+    t.integer  "entry_id",           :null => false
+    t.integer  "tweet_id",           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "post_histories", ["entry_id"], :name => "index_post_histories_on_entry_id", :unique => true
+  add_index "post_histories", ["twitter_fetcher_id"], :name => "index_post_histories_on_twitter_fetcher_id"
 
   create_table "twitter_fetchers", :force => true do |t|
     t.integer  "group_id"

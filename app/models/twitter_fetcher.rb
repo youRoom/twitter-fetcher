@@ -1,6 +1,7 @@
 require 'json'
 
 class TwitterFetcher < ActiveRecord::Base
+  has_many :post_histories
 
   USER_AGENT = "youRoom twitter fetcher"
   URL_FORMAT = "http://twitter.com/%s/status/%s"
@@ -46,18 +47,22 @@ class TwitterFetcher < ActiveRecord::Base
 
   def create_entries
     ActiveRecord::Base.transaction do
-      each_tweet do |content, img_url, name, url|
-        response = post_entry(content, img_url, name, url)
-        if response.code == '201'
-          JSON::parse(response.body)['entry']
+      each_tweet do |content, img_url, name, url, tweet_id|
+        response = post_entry(content, img_url, name, url, parent_id(tweet_id))
+        case response
+        when Net::HTTPCreated
+          entry = JSON::parse(response.body)['entry']
+          post_histories.create!(:entry_id => entry['id'], :tweet_id => tweet_id)
+          entry
         end
       end.compact! || []
     end
   end
 
-  def post_entry content, img_url, name, url
-    access_token_as_youroom_bot.post "#{target_group_url}/entries.json", {
+  def post_entry content, img_url, name, url, parent_id = nil
+    response = access_token_as_youroom_bot.post "#{target_group_url}/entries.json", {
       'entry[content]' => content,
+      'entry[parent_id]' => parent_id,
       'entry[attachment_attributes][data][user][img_url]' => img_url,
       'entry[attachment_attributes][data][user][name]' => name,
       'entry[attachment_attributes][data][url]' => url,
@@ -79,16 +84,14 @@ class TwitterFetcher < ActiveRecord::Base
       img_url, screen_name, name = user ? [user["profile_image_url"], user["screen_name"], "#{user["screen_name"]} / #{user["name"]}"] : [tweet["profile_image_url"], tweet["from_user"], tweet["from_user"]]
       content = tweet["text"][/^.{0,140}/m]
       url = sprintf(URL_FORMAT, screen_name, tweet["id"])
-      yield(content, img_url, name, url)
+      yield(content, img_url, name, url, tweet['id'])
     end
   end
 
   def get
     logger.info " >> url: #{url}"
     logger.info " >> query: #{query.inspect}"
-    oauth = Twitter::OAuth.new(configatron.twitter.consumer.key, configatron.twitter.consumer.secret)
-    oauth.authorize_from_access(self.access_token, self.access_token_secret)
-    @response = Twitter::Request.get(oauth, url, :query => self.query, :format => :json, :headers => {'User-Agent' => USER_AGENT})
+    @response = Twitter::Request.get(oauth_by_twitter, url, :query => self.query, :format => :json, :headers => {'User-Agent' => USER_AGENT})
   end
 
   def items
@@ -167,5 +170,34 @@ class TwitterFetcher < ActiveRecord::Base
 
   def youroom_consumer
     @youroom_consumer ||= OAuth::Consumer.new(configatron.youroom.consumer.key, configatron.youroom.consumer.secret, :site => "http://#{configatron.url_options[:host]}:#{configatron.url_options[:port]}")
+  end
+
+  def oauth_by_twitter
+    @oauth_by_twitter ||= Twitter::OAuth.new(configatron.twitter.consumer.key, configatron.twitter.consumer.secret)
+    @oauth_by_twitter.authorize_from_access(self.access_token, self.access_token_secret)
+    @oauth_by_twitter
+  end
+
+  def client_by_twitter
+    @client_by_twitter ||= Twitter::Base.new(oauth_by_twitter)
+  end
+
+  def parent_id tweet_id
+    return nil unless tweet_id
+    response = client_by_twitter.status(tweet_id)
+    if response.is_a? Hash
+      if in_reply_to_status_id = response.in_reply_to_status_id
+        post_history = post_histories.find_by_tweet_id(in_reply_to_status_id)
+        if post_history
+          return post_history.entry_id
+        end
+      end
+      if retweeted_status = response.retweeted_status
+        post_history = post_histories.find_by_tweet_id(retweeted_status.id)
+        if post_history
+          return post_history.entry_id
+        end
+      end
+    end
   end
 end
