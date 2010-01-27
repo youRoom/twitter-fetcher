@@ -75,7 +75,7 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def self.youroom_group_url group_id
-   "http://r#{group_id}.#{configatron.url_options[:host]}:#{configatron.url_options[:port]}"
+    Youroom.group_url group_id
   end
 
   def each_tweet(&block)
@@ -169,7 +169,7 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def youroom_consumer
-    @youroom_consumer ||= OAuth::Consumer.new(configatron.youroom.consumer.key, configatron.youroom.consumer.secret, :site => "http://#{configatron.url_options[:host]}:#{configatron.url_options[:port]}")
+    @youroom_consumer ||= OAuth::Consumer.new(configatron.youroom.consumer.key, configatron.youroom.consumer.secret, :site => Youroom.root_url)
   end
 
   def oauth_by_twitter

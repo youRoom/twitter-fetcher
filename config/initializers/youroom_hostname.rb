@@ -7,4 +7,4 @@ pit = if ['test', 'cucumber'].include?(::Rails.env)
 url_options= { :host => pit['host'] }
 url_options.merge!(:port => pit['port']) unless pit['port'].blank? or pit['port'] == "80"
 
-configatron.url_options = ActionMailer::Base.default_url_options = url_options
+configatron.youroom_url_options = url_options
