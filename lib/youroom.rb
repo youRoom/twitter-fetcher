@@ -4,6 +4,6 @@ class Youroom
   end
 
   def self.group_url group_id
-    "http://r#{group_id}.#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}"
+    "https://r#{group_id}.#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}"
   end
 end

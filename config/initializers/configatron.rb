@@ -1,8 +1,8 @@
 pit = Pit.get(
-  'youroom.twitter_fetcher',
+  'youroom_twitter_fetcher',
   :require => {
-    'youroom.consumer.key' => '',
-    'youroom.consumer.secret' => '',
+    'youroom_consumer.key' => '',
+    'youroom_consumer.secret' => '',
     'youroom.access_token.key' => '',
     'youroom.access_token.secret' => '',
     'twitter.consumer.key' => '',
