@@ -127,7 +127,7 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def search_query
-    { :q => self.setting_option[:value] }
+    { :q => URI.encode(self.setting_option[:value]) }
   end
 
   def search_api_url
