@@ -4,6 +4,11 @@ class Youroom
   end
 
   def self.group_url group_id
-    "https://r#{group_id}.#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}"
+    scheme = if %w(production staging).include? ::Rails.env
+               "https"
+             else
+               "http"
+             end
+    "#{scheme}://r#{group_id}.#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}"
   end
 end
