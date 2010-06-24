@@ -9,6 +9,6 @@ class Youroom
              else
                "http"
              end
-    "#{scheme}://r#{group_id}.#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}"
+    "#{scheme}://www.#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}/r/#{group_id}"
   end
 end
