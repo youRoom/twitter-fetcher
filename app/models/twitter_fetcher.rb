@@ -48,7 +48,7 @@ class TwitterFetcher < ActiveRecord::Base
   def create_entries
     ActiveRecord::Base.transaction do
       each_tweet do |content, img_url, name, url, tweet_id|
-        response = post_entry(content, img_url, name, url, parent_id(tweet_id))
+        response = post_entry(content, img_url, name, url, tweet_id)
         case response
         when Net::HTTPCreated
           entry = JSON::parse(response.body)['entry']
@@ -59,10 +59,10 @@ class TwitterFetcher < ActiveRecord::Base
     end
   end
 
-  def post_entry content, img_url, name, url, parent_id = nil
+  def post_entry content, img_url, name, url, tweet_id
     response = access_token_as_youroom_bot.post "#{target_group_url}/entries.json", {
       'entry[content]' => content,
-      'entry[parent_id]' => parent_id,
+      'entry[parent_id]' => parent_id(tweet_id),
       'entry[attachment_attributes][data][user][img_url]' => img_url,
       'entry[attachment_attributes][data][user][name]' => name,
       'entry[attachment_attributes][data][url]' => url,
@@ -163,6 +163,23 @@ class TwitterFetcher < ActiveRecord::Base
     end
   end
 
+  def parent_id tweet_id
+    return nil unless tweet_id
+
+    pt_id = self.parent_tweet_id(tweet_id)
+    if post_history = (pt_id && self.post_histories.find_by_tweet_id(pt_id))
+      post_history.entry_id
+    end
+  end
+
+  def parent_tweet_id tweet_id
+    response = client_by_twitter.status(tweet_id)
+    if response.is_a? Hash
+      response.in_reply_to_status_id ||
+        ((rs = response.retweeted_status) && rs.id)
+    end
+  end
+
   private
   def access_token_as_youroom_bot
     @access_token_as_youroom_bot ||= OAuth::AccessToken.new(youroom_consumer, configatron.youroom.access_token.key, configatron.youroom.access_token.secret)
@@ -182,22 +199,4 @@ class TwitterFetcher < ActiveRecord::Base
     @client_by_twitter ||= Twitter::Base.new(oauth_by_twitter)
   end
 
-  def parent_id tweet_id
-    return nil unless tweet_id
-    response = client_by_twitter.status(tweet_id)
-    if response.is_a? Hash
-      if in_reply_to_status_id = response.in_reply_to_status_id
-        post_history = post_histories.find_by_tweet_id(in_reply_to_status_id)
-        if post_history
-          return post_history.entry_id
-        end
-      end
-      if retweeted_status = response.retweeted_status
-        post_history = post_histories.find_by_tweet_id(retweeted_status.id)
-        if post_history
-          return post_history.entry_id
-        end
-      end
-    end
-  end
 end
