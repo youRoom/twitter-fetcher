@@ -2,14 +2,22 @@ require 'spec_helper'
 
 describe TwitterFetcher do
 
-  describe "#parent_id" do
+  describe "#parent_topic_id" do
     before do
-      @tf = TwitterFetcher.new
+      @tf = TwitterFetcher.create!(:setting_type => "type", :setting_value => "option", :access_token => "at", :access_token_secret => "ats", :skip_fetching => true)
+      @tf.stub(:root_topic_id).and_return(50)
     end
-    subject { @tf.parent_id(@attr) }
-    it "should return nil when is is not given" do
+    subject { @tf.parent_topic_id(@attr) }
+
+    it "should return root_topic_id when it is not given" do
       @attr = nil
-      should == nil
+      should == 50
+    end
+
+    it "should return root_topic_id when given tweet does not have parent" do
+      @attr = 1
+      @tf.stub(:parent_tweet_id).and_return(nil)
+      should == 50
     end
 
     it "should return entry_id when the tweet has parent tweet" do
@@ -40,8 +48,7 @@ describe TwitterFetcher do
     end
 
     it "should return retweeted_status's id when it is retweeted" do
-      @response.sho
-      uld_receive(:retweeted_status).and_return(stub("rtweet", :id => 200))
+      @response.should_receive(:retweeted_status).and_return(stub("rtweet", :id => 200))
       should == 200
     end
   end

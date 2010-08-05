@@ -9,12 +9,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100127054656) do
+ActiveRecord::Schema.define(:version => 20100805021027) do
 
   create_table "post_histories", :force => true do |t|
     t.integer  "twitter_fetcher_id"
     t.integer  "entry_id",                        :null => false
-    t.integer  "tweet_id",           :limit => 8, :null => false
+    t.integer  "tweet_id",           :limit => 8
     t.datetime "created_at"
     t.datetime "updated_at"
   end

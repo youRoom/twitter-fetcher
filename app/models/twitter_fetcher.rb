@@ -1,12 +1,12 @@
 require 'json'
 
 class TwitterFetcher < ActiveRecord::Base
-  has_many :post_histories
+  has_many :post_histories, :dependent => :destroy
 
   USER_AGENT = "youRoom twitter fetcher"
   URL_FORMAT = "http://twitter.com/%s/status/%s"
 
-  attr_accessor :setting_type, :setting_value
+  attr_accessor :setting_type, :setting_value, :skip_fetching
 
   validates_presence_of :setting_type, :setting_value, :access_token, :access_token_secret
 
@@ -19,8 +19,10 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def after_create
-    self.fetch
-    self.create_entries
+    unless skip_fetching
+      self.fetch
+      self.create_entries
+    end
   end
 
   def self.fetch_all
@@ -48,26 +50,28 @@ class TwitterFetcher < ActiveRecord::Base
   def create_entries
     ActiveRecord::Base.transaction do
       each_tweet do |content, img_url, name, url, tweet_id|
-        response = post_entry(content, img_url, name, url, tweet_id)
-        case response
-        when Net::HTTPCreated
-          entry = JSON::parse(response.body)['entry']
-          post_histories.create!(:entry_id => entry['id'], :tweet_id => tweet_id)
-          entry
-        end
+        body_hash = {
+          'entry[content]' => content,
+          'entry[parent_id]' => parent_topic_id(tweet_id),
+          'entry[attachment_attributes][data][user][img_url]' => img_url,
+          'entry[attachment_attributes][data][user][name]' => name,
+          'entry[attachment_attributes][data][url]' => url,
+          'entry[attachment_attributes][attachment_type]' => 'twitter'
+        }
+        post_entry body_hash, tweet_id
       end.compact! || []
     end
   end
 
-  def post_entry content, img_url, name, url, tweet_id
-    response = access_token_as_youroom_bot.post "#{target_group_url}/entries.json", {
-      'entry[content]' => content,
-      'entry[parent_id]' => parent_id(tweet_id),
-      'entry[attachment_attributes][data][user][img_url]' => img_url,
-      'entry[attachment_attributes][data][user][name]' => name,
-      'entry[attachment_attributes][data][url]' => url,
-      'entry[attachment_attributes][attachment_type]' => 'twitter'
-    }
+  def post_entry body_hash, tweet_id = nil
+    logger.info "[POST Entry to youRoom] #{target_group_url}: #{body_hash.inspect}"
+    response = access_token_as_youroom_bot.post "#{target_group_url}/entries.json", body_hash
+    case response
+    when Net::HTTPCreated
+      entry = JSON::parse(response.body)['entry']
+      self.post_histories.create!(:entry_id => entry['id'], :tweet_id => tweet_id)
+      entry
+    end
   end
 
   def target_group_url
@@ -163,13 +167,24 @@ class TwitterFetcher < ActiveRecord::Base
     end
   end
 
-  def parent_id tweet_id
-    return nil unless tweet_id
+  def parent_topic_id tweet_id
+    return self.root_topic_id unless tweet_id
 
     pt_id = self.parent_tweet_id(tweet_id)
     if post_history = (pt_id && self.post_histories.find_by_tweet_id(pt_id))
       post_history.entry_id
+    else
+      self.root_topic_id
     end
+  end
+
+  def root_topic_id
+    @root_topic_id ||= if root_history = self.post_histories.created_at_gte(Time.now.beginning_of_day).ascend_by_created_at.tweet_id_null.first
+                         root_history.entry_id
+                       else
+                         entry = post_entry 'entry[content]' => "Today's twitter feed of '#{self.setting_value}'"
+                         entry['id']
+                       end
   end
 
   def parent_tweet_id tweet_id
