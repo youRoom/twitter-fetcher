@@ -88,6 +88,7 @@ class TwitterFetcher < ActiveRecord::Base
       img_url, screen_name, name = user ? [user["profile_image_url"], user["screen_name"], "#{user["screen_name"]} / #{user["name"]}"] : [tweet["profile_image_url"], tweet["from_user"], tweet["from_user"]]
       content = tweet["text"][/^.{0,140}/m]
       url = sprintf(URL_FORMAT, screen_name, tweet["id"])
+
       yield(content, img_url, name, url, tweet['id'])
     end
   end
@@ -182,7 +183,7 @@ class TwitterFetcher < ActiveRecord::Base
     @root_topic_id ||= if root_history = self.post_histories.created_at_gte(Time.now.beginning_of_day).ascend_by_created_at.tweet_id_null.first
                          root_history.entry_id
                        else
-                         entry = post_entry 'entry[content]' => "Today's twitter feed of '#{self.setting_value}'"
+                         entry = post_entry('entry[content]' => "Twitter feeds of #{self.setting_option[:value]} on #{Time.now.strftime('%Y/%m/%d')}")
                          entry['id']
                        end
   end

@@ -51,8 +51,8 @@ Rails::Initializer.run do |config|
   config.gem "searchlogic", :version => ">=2.3.8"
   config.gem 'configatron', :lib => 'configatron'
   config.gem 'pit', :lib => "pit"
+  config.gem 'twitter'
   config.gem "oauth"
   config.gem "oauth-plugin"
-  config.gem 'twitter'
   config.gem 'hoptoad_notifier'
 end
