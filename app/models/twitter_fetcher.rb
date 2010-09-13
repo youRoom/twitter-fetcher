@@ -180,7 +180,7 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def root_topic_id
-    @root_topic_id ||= if root_history = self.post_histories.created_at_gte(Time.now.beginning_of_day).ascend_by_created_at.tweet_id_null.first
+    @root_topic_id ||= if root_history = self.post_histories(true).created_at_gte(Time.now.beginning_of_day).ascend_by_created_at.tweet_id_null.first
                          root_history.entry_id
                        else
                          entry = post_entry('entry[content]' => "Twitter feeds of #{self.setting_option[:value]} on #{Time.now.strftime('%Y/%m/%d')}")
