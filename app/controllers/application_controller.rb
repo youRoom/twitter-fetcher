@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
     case res
     when Net::HTTPSuccess
       participation = JSON.parse(res.body)['participation']
-      if participation &&  participation['admin']
+      if participation &&  participation['application_admin']
         session[:access_token] = access_token_as_youroom_user.token
         session[:access_token_secret] = access_token_as_youroom_user.secret
         return true
