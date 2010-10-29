@@ -183,7 +183,9 @@ class TwitterFetcher < ActiveRecord::Base
     @root_topic_id ||= if root_history = self.post_histories(true).created_at_gte(Time.now.beginning_of_day).ascend_by_created_at.tweet_id_null.first
                          root_history.entry_id
                        else
-                         entry = post_entry('entry[content]' => "Twitter feeds of #{self.setting_option[:value]} on #{Time.now.strftime('%Y/%m/%d')}")
+                         entry = post_entry('entry[content]' => "Twitter feeds of #{self.setting_option[:value]} on #{Time.now.strftime('%Y/%m/%d')}",
+                                            'entry[attachment_attributes][attachment_type]' => 'twitter',
+                                            'entry[attachment_attributes][data][render_default_view]' => true)
                          entry['id']
                        end
   end
