@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
 
   def require_login
     if session[:access_token].blank?
-      redirect_to verify_youroom_group_oauth_url(params[:group_id])
+      render "sessions/login_required"
       return
     else
       return true if authorize?

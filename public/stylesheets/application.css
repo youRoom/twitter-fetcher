@@ -4,7 +4,7 @@ a.rounded {
   text-align: center;
   height: 30px;
   line-height: 30px;
-  background: transparent url( ./../images/btn_right.png ) no-repeat scroll right top;
+  background: transparent url(./../images/btn_right.png) no-repeat scroll right top;
   clear: left;
   display: block;
   padding: 0 10px 0 0;
@@ -18,8 +18,8 @@ a.rounded {
     padding: 0 0 0 10px;
     height: 30px;
     line-height: 30px;
-    background: transparent url( ./../images/btn_left.png ) no-repeat scroll left top;
-    color: #03c; }
+    background: transparent url(./../images/btn_left.png) no-repeat scroll left top;
+    color: #0033cc; }
   a.rounded:hover {
     background-position: 100% -30px;
     text-decoration: none; }
@@ -42,7 +42,7 @@ body.with_image_group {
 
 body {
   color: #4c4c4c;
-  font-family: "Hiragino Kaku Gothic Pro","ヒラギノ角ゴ Pro W3",'メイリオ',Meiryo,"ＭＳ Ｐゴシック",Geneva,Arial,Verdana,sans-serif; }
+  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Geneva, Arial, Verdana, sans-serif; }
 
 h1, h2 {
   font-size: 150%; }
@@ -80,8 +80,9 @@ table td form {
 
 .small_text {
   font-size: 0.7em; }
-  form.small_text {
-    color: #707070; }
+
+form .small_text {
+  color: #707070; }
 
 .alert {
   color: red;
@@ -121,7 +122,7 @@ b.required {
 #top {
   border-bottom: 1px solid #a0a0a0;
   font-weight: bold;
-  background-color: #ffffff;
+  background-color: white;
   position: relative; }
   #top img {
     margin: 5px; }
@@ -134,7 +135,7 @@ b.required {
   margin: 1em auto;
   width: 780px;
   text-align: left;
-  background-color: #ffffff;
+  background-color: white;
   overflow: hidden; }
   #container h1, #container h2 {
     padding: 3px 0 1px 3px;
@@ -169,7 +170,7 @@ b.required {
     border: none; }
     #sidebar h2.hint {
       background-color: #cc9900;
-      color: #fff;
+      color: white;
       text-align: center;
       width: 100px;
       margin: 5px auto; }
@@ -184,7 +185,7 @@ b.required {
   #ads #ads_wrapper .group_ads {
     padding: 3px;
     margin: 5px 0 20px 0;
-    border: 1px solid #ddd;
+    border: 1px solid #dddddd;
     font-size: 0.8em;
     width: 127px;
     overflow: hidden; }
@@ -200,7 +201,7 @@ b.required {
   #ads #invite_for_user_community {
     font-size: 10px;
     padding: 3px;
-    background-color: #F0FFDD; }
+    background-color: #f0ffdd; }
 
 .entry {
   margin: 5px 0;
@@ -214,7 +215,7 @@ b.required {
     border-top: 2px dotted #cfcfcf;
     margin: 0; }
   .entry.unread {
-    background-color: #FFF5EE; }
+    background-color: #fff5ee; }
   .entry .thumb_wrapper {
     position: relative;
     border-right: 1px dotted #cfcfcf; }
@@ -283,63 +284,63 @@ b.required {
   .entry_wrapper.level1.type3 {
     background-color: #ffffe8; }
   .entry_wrapper.level1.type4 {
-    background-color: #eee; }
+    background-color: #eeeeee; }
   .entry_wrapper.type0 .level2 {
-    background-color: #DADAFF; }
+    background-color: #dadaff; }
   .entry_wrapper.type0 .level3 {
-    background-color: #CCCCFF; }
+    background-color: #ccccff; }
   .entry_wrapper.type0 .level4 {
-    background-color: #BEBEFF; }
+    background-color: #bebeff; }
   .entry_wrapper.type0 .level5 {
-    background-color: #B0B0FF; }
+    background-color: #b0b0ff; }
   .entry_wrapper.type0 .level6 {
     background-color: #a2a2ff; }
   .entry_wrapper.type1 .level2 {
-    background-color: #DAF7E9; }
+    background-color: #daf7e9; }
   .entry_wrapper.type1 .level3 {
-    background-color: #CCF4E0; }
+    background-color: #ccf4e0; }
   .entry_wrapper.type1 .level4 {
-    background-color: #BEF2D8; }
+    background-color: #bef2d8; }
   .entry_wrapper.type1 .level5 {
-    background-color: #B0EFCF; }
+    background-color: #b0efcf; }
   .entry_wrapper.type1 .level6 {
-    background-color: #A2ECC7; }
+    background-color: #a2ecc7; }
   .entry_wrapper.type2 .level2 {
-    background-color: #E9DAF0; }
+    background-color: #e9daf0; }
   .entry_wrapper.type2 .level3 {
-    background-color: #E0CCEB; }
+    background-color: #e0cceb; }
   .entry_wrapper.type2 .level4 {
-    background-color: #D8BEE5; }
+    background-color: #d8bee5; }
   .entry_wrapper.type2 .level5 {
-    background-color: #CFB0E0; }
+    background-color: #cfb0e0; }
   .entry_wrapper.type2 .level6 {
-    background-color: #C7A2DA; }
+    background-color: #c7a2da; }
   .entry_wrapper.type3 .level2 {
-    background-color: #FFFFDA; }
+    background-color: #ffffda; }
   .entry_wrapper.type3 .level3 {
-    background-color: #FFFFCC; }
+    background-color: #ffffcc; }
   .entry_wrapper.type3 .level4 {
-    background-color: #FFFFBE; }
+    background-color: #ffffbe; }
   .entry_wrapper.type3 .level5 {
-    background-color: #FFFFB0; }
+    background-color: #ffffb0; }
   .entry_wrapper.type3 .level6 {
     background-color: #ffffa2; }
   .entry_wrapper.type4 .level2 {
-    background-color: #E4E4E4; }
+    background-color: #e4e4e4; }
   .entry_wrapper.type4 .level3 {
-    background-color: #DADADA; }
+    background-color: #dadada; }
   .entry_wrapper.type4 .level4 {
-    background-color: #CFCFCF; }
+    background-color: #cfcfcf; }
   .entry_wrapper.type4 .level5 {
-    background-color: #C5C5C5; }
+    background-color: #c5c5c5; }
   .entry_wrapper.type4 .level6 {
-    background-color: #bbb; }
+    background-color: #bbbbbb; }
 
 .comments {
   padding: 2px;
   margin: 0 10px; }
   .comments .comment {
-    background-color: #F0FFDD;
+    background-color: #f0ffdd;
     margin: 3px 0;
     padding: 3px; }
     .comments .comment .info {
@@ -352,7 +353,7 @@ b.required {
       font-size: 80%; }
 
 .operations {
-  background-color: #F0FFDD;
+  background-color: #f0ffdd;
   margin: 3px 0;
   height: 1.5em; }
   .operations li {
@@ -409,7 +410,7 @@ textarea.entry_content, textarea.maxwidth {
   margin: 1em auto;
   padding: 5px;
   position: relative;
-  background-color: #4169E1;
+  background-color: #4169e1;
   color: white;
   font-weight: bold;
   height: 140px; }
@@ -430,7 +431,7 @@ textarea.entry_content, textarea.maxwidth {
     padding: 5px;
     font-size: 14px;
     float: left;
-    background-color: #1E90FF;
+    background-color: #1e90ff;
     width: 110px;
     height: 120px;
     margin: 5px;
@@ -455,12 +456,12 @@ textarea.entry_content, textarea.maxwidth {
   margin: 1em auto;
   padding: 5px;
   position: relative;
-  background-color: #F0F8FF; }
+  background-color: #f0f8ff; }
   #new_feature_message #close_new_feature {
     position: absolute;
     top: 2px;
     right: 2px;
-    background-color: #FECE2F;
+    background-color: #fece2f;
     color: black; }
   #new_feature_message p {
     margin: 0.5em; }
@@ -499,7 +500,7 @@ ul.horizontal_menu {
       background-color: #efd3bf; }
 
 p.simple_format {
-  margin: 1.0em 0; }
+  margin: 1em 0; }
 
 .clear_left {
   clear: left; }
@@ -584,13 +585,13 @@ ul.unread_menu {
   list-style-type: none;
   list-style-position: inside;
   margin: 0.5em;
-  background-color: #F0FFDD;
+  background-color: #f0ffdd;
   padding: 2px 4px;
   font-size: 0.8em;
   height: 1.5em; }
 
 #entries .new {
-  background: #FFECD1;
+  background: #ffecd1;
   margin: 5px; }
   #entries .new .current_user {
     padding: 5px; }
@@ -649,8 +650,8 @@ ul.unread_menu {
   .participation.show .profile {
     margin: 1em 0;
     padding: 5px;
-    background-color: #F5F5F5;
-    border: 1px solid #CCCCCC;
+    background-color: #f5f5f5;
+    border: 1px solid #cccccc;
     font-size: 0.8em; }
     .participation.show .profile .name {
       font-weight: bold; }
@@ -670,7 +671,7 @@ body.root #footer {
 body.root.info {
   background: url(../images/top_bg.png) repeat-x; }
 body.root.login {
-  background-color: #FFFFFF;
+  background-color: white;
   background: none; }
   body.root.login #login_header {
     position: absolute;
@@ -691,9 +692,9 @@ body.root.login {
         float: left;
         margin: 3px 0; }
     body.root.login #login_header .login_close {
-      background-color: #98FB98; }
+      background-color: #98fb98; }
     body.root.login #login_header .login_open {
-      background-color: #66CDAA; }
+      background-color: #66cdaa; }
     body.root.login #login_header .login_form {
       position: absolute;
       top: 30px;
@@ -720,7 +721,7 @@ body.root.login {
   padding: 5px;
   margin: 0 0 25px 200px; }
   #login_form h2 {
-    font-size: 1.0em;
+    font-size: 1em;
     border: none; }
   #login_form p.right {
     text-align: right; }
@@ -754,7 +755,7 @@ body.root.login {
       font-weight: bold;
       text-decoration: none; }
     #youroom_navigation ul li a:hover {
-      background-color: #EEFFEE;
+      background-color: #eeffee;
       text-decoration: underline;
       color: #009933; }
 
@@ -776,7 +777,7 @@ body.root.login {
         font-weight: bold;
         text-decoration: none; }
       #subnavigation ul li a:hover {
-        background-color: #EEFFEE;
+        background-color: #eeffee;
         text-decoration: underline; }
 
 #youroom_introduction .left {
@@ -830,7 +831,7 @@ body.root.login {
   margin-top: 10px; }
   #youroom_info .usage ul {
     float: left;
-    border: 1px solid #CCCCCC;
+    border: 1px solid #cccccc;
     margin: 10px 20px;
     width: 330px;
     height: 230px;
@@ -857,8 +858,8 @@ body.root.login {
     font-size: 1.5em; }
 
 #youroom_tour {
-  margin-top: 1.0em;
-  margin-bottom: 1.0em; }
+  margin-top: 1em;
+  margin-bottom: 1em; }
 
 .static_info {
   width: 600px;
@@ -887,7 +888,7 @@ body.root_login_group .description {
     font-weight: bold; }
 
 #group_description_long #description {
-  background-color: #F0FFDD;
+  background-color: #f0ffdd;
   border-bottom: 3px solid #ddffc0;
   border-right: 3px solid #ddffc0;
   padding: 10px;
@@ -947,7 +948,7 @@ body.root_login_group .description {
     border-bottom: 2px dotted green;
     padding-left: 10px; }
   #container.static p {
-    margin: 0.5em 1.0em; }
+    margin: 0.5em 1em; }
 
 .premium_content {
   margin: 10px 0 10px 0; }
@@ -1056,7 +1057,7 @@ body.root_login_group .description {
     #sidebar .search_wrapper form input.ui-corner-all {
       width: 150px;
       display: inline;
-      border: 1px solid #AAAAAA;
+      border: 1px solid #aaaaaa;
       padding: 2px;
       outline: none;
       font-size: 1em;
@@ -1127,7 +1128,7 @@ body.root_login_group .description {
 form.green_align_right {
   margin: 1.5em 1em 1.5em 320px;
   padding: 0.5em;
-  background-color: #F0FFDD; }
+  background-color: #f0ffdd; }
   form.green_align_right h3 {
     font-size: 110%;
     margin: 0.7em 0.3em; }
@@ -1165,7 +1166,7 @@ form.green_align_right {
     #above_container ul .action {
       text-align: center; }
     #above_container ul .group_description {
-      background-color: #F0FFDD;
+      background-color: #f0ffdd;
       border-bottom: 3px solid #ddffc0;
       border-right: 3px solid #ddffc0;
       padding: 10px;
@@ -1182,7 +1183,7 @@ form.green_align_right {
   #feature_list ul#feature_tabs li {
     margin: 10px 0; }
     #feature_list ul#feature_tabs li a.current {
-      background: #FFFFCC;
+      background: #ffffcc;
       cursor: default; }
 #feature_list .center {
   text-align: center; }
@@ -1194,3 +1195,23 @@ form.green_align_right {
 #feature_list table tr td p {
   color: gray;
   letter-spacing: 0.03em; }
+
+#service-description {
+  margin: 20px; }
+  #service-description p {
+    margin: 1em 0; }
+
+#sign-in {
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 10px auto 40px; }
+  #sign-in a {
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border: 5px solid green;
+    background: #dcebb0;
+    color: #666666; }
