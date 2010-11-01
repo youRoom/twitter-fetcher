@@ -7,8 +7,7 @@ class ApplicationController < ActionController::Base
 
   layout 'application'
 
-  before_filter :require_group
-  before_filter :require_login
+  before_filter :require_group, :require_login
 
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password

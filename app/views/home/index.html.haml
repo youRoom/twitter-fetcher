@@ -1,1 +1,19 @@
-%h1 Welcome to Twitter fetcher
+%h1 Twitter fetcher (Home)
+
+#service-description
+  %p
+    Twitter FetcherはTwitterのつぶやきをyouRoom上に取り込むことができます。<br />
+    チームメンバーのつぶやきを取り込んでさらにyouRoom上で公開では話せないような話をしたり、ルームに関わるキーワードを取り込んでTwitter上での口コミをルームで共有することができます。
+  - if params[:group_id]
+    %p
+      利用するには、以下のリンクをクリックしてください。クリックするとyouRoomとの認証を始めます。<br />
+      このサービスを利用するには、"Allow"をクリックしてください。次にこちらのサービスの設定画面に遷移します。
+  - else
+    %p
+      youRoomのあなたのルームの「ルーム拡張」のページからTwitter Fetcherを探してインストールしてください。
+    %p
+      = link_to "youRoomへ", "http://www.youroom.in/"
+
+- if params[:group_id]
+  #sign-in
+    = link_to "Sign in with youRoom", verify_youroom_group_oauth_url(params[:group_id])
