@@ -17,7 +17,6 @@ class TwitterFetchersController < ApplicationController
       :access_token_secret => session[:twitter_access_token_secret]
     }))
     if @fetcher.save
-      clear_twitter_token
       redirect_to :action => :index
     else
       render "new"
@@ -58,12 +57,5 @@ class TwitterFetchersController < ApplicationController
 
   def group_name_cache_key(group_id = params[:group_id])
     "group_name/#{group_id}"
-  end
-
-  def clear_twitter_token
-    session[:twitter_request_token] = nil
-    session[:twitter_request_token_secret] = nil
-    session[:twitter_access_token] = nil
-    session[:twitter_access_token_secret] = nil
   end
 end
