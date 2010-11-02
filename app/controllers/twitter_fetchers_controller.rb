@@ -1,5 +1,6 @@
 class TwitterFetchersController < ApplicationController
   before_filter :require_verify_twitter, :only => %w(new create)
+  before_filter :load_group
 
   def index
     @fetchers = TwitterFetcher.group_id_equals(params[:group_id])
@@ -35,6 +36,28 @@ class TwitterFetchersController < ApplicationController
       redirect_to verify_twitter_group_oauth_url(params[:group_id])
       return
     end
+  end
+
+  def load_group
+    @group = { :name => get_group_name, :picture => "#{Youroom.group_url(params[:group_id])}/picture" }
+
+  end
+
+  def get_group_name
+    if group_name = Rails.cache.read(group_name_cache_key)
+      group_name
+    else
+      res = access_token_as_youroom_user.get("#{Youroom.my_groups_url}.json")
+      groups = JSON.parse(res.body)
+      group = groups.detect{|group| group["group"]["id"].to_s == params[:group_id]}
+      group_name = group["group"]["name"]
+      Rails.cache.write(group_name_cache_key, group_name)
+      group_name
+    end
+  end
+
+  def group_name_cache_key(group_id = params[:group_id])
+    "group_name/#{group_id}"
   end
 
   def clear_twitter_token
