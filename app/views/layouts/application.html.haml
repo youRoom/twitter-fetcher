@@ -5,12 +5,42 @@
     = render :partial => 'layouts/meta'
     = render :partial => 'layouts/stylesheets_include'
 
-  %body.with_image
+  %body
     = render :partial => 'layouts/flash_message'
+    #wrapper
+      #header
+        #logo
+          %h1= link_to "TwitterFetcher", root_url
 
-    #container.ui-corner-all
-      = yield
-    = render :partial => 'layouts/footer'
+      #menu
+        %ul
+          %li.current_page_item= link_to "Setting", "#"
+
+      #page
+        #content
+          .post
+            = yield
+          .clear-both
+            &nbsp;
+        #sidebar
+          = yield :sidebar
+          .clear-both
+            &nbsp;
+        .clear-both
+          &nbsp;
+
+      #footer-content
+        .column1
+          = yield :footer_content_left
+          &nbsp;
+        .column2
+          = yield :footer_content_right
+          &nbsp;
+
+      #footer
+        %p
+          Design by <a href="http://www.nodethirtythree.com">nodethirtythree</a> and <a href="http://www.freecsstemplates.org">Free CSS Templates</a>.
+
     = render :partial => 'layouts/javascript_include'
     :javascript
       $(function(){

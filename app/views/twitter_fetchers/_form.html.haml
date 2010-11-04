@@ -1,15 +1,15 @@
 = form.error_messages
 
 %p
-  = form.label :setting_type, "Type"
+  = form.label :setting_type, "対象"
   %br
-  = form.radio_button :setting_type, "keyword"
-  = form.label :setting_type_keyword, "Keyword"
   = form.radio_button :setting_type, "user"
-  = form.label :setting_type_user, "User"
+  = form.label :setting_type_user, "ユーザID"
+  = form.radio_button :setting_type, "keyword"
+  = form.label :setting_type_keyword, "キーワード"
 
 %p
-  = form.label :setting_value, "Target key word / Twitter user name"
+  = form.label :setting_value, "ユーザID か キーワード"
   %br
   = form.text_field :setting_value
 

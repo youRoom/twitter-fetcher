@@ -1,25 +1,27 @@
-%h2
+%h2.title
   = image_tag(@group[:picture], :size => "48x48")
   = link_to h(@group[:name]), Youroom.group_url(params[:group_id]), :target => "_blank"
   の設定
 
-.list_wrapper
-  %table.list
-    %thead
-      %tr
-        %th
-          type
-        %th
-          user / keyword
-        %th
-    %tbody
-      - @fetchers.each do |fetcher|
+.entry
+  .list_wrapper
+    %table.list
+      %thead
         %tr
-          %td
-            = h fetcher.setting_option[:type]
-          %td
-            = h fetcher.setting_option[:value]
-          %td
-            = link_to "Destroy", group_twitter_fetcher_path(params[:group_id], fetcher), :method => :delete
-.margin1em
-  = link_to "Add conditions", new_group_twitter_fetcher_path(params[:group_id])
+          %th
+            対象
+          %th
+            ユーザID / キーワード
+          %th
+      %tbody
+        - @fetchers.each do |fetcher|
+          %tr
+            %td
+              = h fetcher.setting_option[:type]
+            %td
+              = h fetcher.setting_option[:value]
+            %td
+              = link_to "削除する", group_twitter_fetcher_path(params[:group_id], fetcher), :method => :delete
+
+- content_for :sidebar do
+  = link_to "新しい取り込み設定の追加", new_group_twitter_fetcher_path(params[:group_id])

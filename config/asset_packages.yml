@@ -5,5 +5,5 @@ javascripts:
   - application
 stylesheets:
 - base:
-  - reset
+  - style
   - application

@@ -1,7 +1,8 @@
-%h1
-  New twitter fetching methods
+%h2.title
+  新しい取り込み設定の追加
 
-- form_for(@fetcher, :url => group_twitter_fetchers_path(params[:group_id])) do |f|
-  = render f
-  %p
-    = f.submit "Create"
+.entry
+  - form_for(@fetcher, :url => group_twitter_fetchers_path(params[:group_id])) do |f|
+    = render f
+    %p
+      = f.submit "作成"
