@@ -1,6 +1,6 @@
 %h2
   = image_tag(@group[:picture], :size => "48x48")
-  = h(@group[:name])
+  = link_to h(@group[:name]), Youroom.group_url(params[:group_id]), :target => "_blank"
   の設定
 
 .list_wrapper
