@@ -14,7 +14,11 @@
 
       #menu
         %ul
-          %li.current_page_item= link_to "Setting", "#"
+          %li.current_page_item
+            - url = params[:group_id] ? Youroom.group_url(params[:group_id]) : root_url
+            = link_to "Setting", url
+          - if logged_in?
+            %li= link_to "Logout", logout_path
 
       #page
         #content
@@ -31,6 +35,9 @@
 
       #footer-content
         .column1
+          - if logged_in?
+            .account
+              Your account: #{participation_name}
           = yield :footer_content_left
           &nbsp;
         .column2

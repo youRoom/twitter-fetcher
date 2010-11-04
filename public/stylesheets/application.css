@@ -24,3 +24,8 @@ table.list {
   #sign-in a:hover {
     background: silver;
     color: black; }
+
+#sidebar p.notice {
+  font-size: 0.8em;
+  color: #666666;
+  margin-top: 10px; }

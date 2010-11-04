@@ -9,11 +9,13 @@ class ApplicationController < ActionController::Base
 
   before_filter :require_group, :require_login
 
+  helper_method :logged_in?, :participation_name
+
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
 
   def render_not_found
-    logger.info "headers: #{request.headers.map{ |k,v| "{#{k}:#{v}}"}.join(' ')}"
+    logger.debug "headers: #{request.headers.map{ |k,v| "{#{k}:#{v}}"}.join(' ')}"
     respond_to do |format|
       format.html { render "public/404.html", :layout => false, :status => :not_found }
       format.all { head :not_found }
@@ -29,13 +31,17 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login
-    if session[:access_token].blank?
+    if !logged_in?
       render "sessions/login_required"
       return
     else
       return true if authorize?
       render_not_found
     end
+  end
+
+  def logged_in?
+    !session[:access_token].blank?
   end
 
   def authorize?
@@ -47,13 +53,17 @@ class ApplicationController < ActionController::Base
       if participation &&  participation['application_admin']
         session[:access_token] = access_token_as_youroom_user.token
         session[:access_token_secret] = access_token_as_youroom_user.secret
-        return true
+        session[:participation_name] = participation["name"]
       else
         reset_session
       end
     end
   rescue OAuth::Unauthorized => e
     reset_session
+  end
+
+  def participation_name
+    session[:participation_name] || ""
   end
 
   def youroom_consumer

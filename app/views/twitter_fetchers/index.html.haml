@@ -4,24 +4,35 @@
   の設定
 
 .entry
-  .list_wrapper
-    %table.list
-      %thead
-        %tr
-          %th
-            対象
-          %th
-            ユーザID / キーワード
-          %th
-      %tbody
-        - @fetchers.each do |fetcher|
+
+  - if @fetchers.empty?
+    %p
+      このルームには、取り込み設定がありません。
+    %p
+      右の「新しい取り込み設定の追加」から設定を追加してください。
+  - else
+    .list_wrapper
+      %table.list
+        %thead
           %tr
-            %td
-              = h fetcher.setting_option[:type]
-            %td
-              = h fetcher.setting_option[:value]
-            %td
-              = link_to "削除する", group_twitter_fetcher_path(params[:group_id], fetcher), :method => :delete
+            %th
+              対象
+            %th
+              ユーザID / キーワード
+            %th
+        %tbody
+          - @fetchers.each do |fetcher|
+            %tr
+              %td
+                = h fetcher.setting_option[:type]
+              %td
+                = h fetcher.setting_option[:value]
+              %td
+                = link_to "削除する", group_twitter_fetcher_path(params[:group_id], fetcher), :method => :delete
 
 - content_for :sidebar do
   = link_to "新しい取り込み設定の追加", new_group_twitter_fetcher_path(params[:group_id])
+  - unless linked_with_twitter?
+    %p.notice
+      = image_tag("logo_twitter.png")
+      追加するにはTwitterの認証が必要です。作成ボタンをクリックすると次の画面でTwitterの認証画面が表示されます。"許可する"をクリックすると登録できます。

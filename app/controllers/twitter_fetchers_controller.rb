@@ -2,6 +2,8 @@ class TwitterFetchersController < ApplicationController
   before_filter :require_verify_twitter, :only => %w(new create)
   before_filter :load_group
 
+  helper_method :linked_with_twitter?
+
   def index
     @fetchers = TwitterFetcher.group_id_equals(params[:group_id])
   end
@@ -31,7 +33,7 @@ class TwitterFetchersController < ApplicationController
 
   private
   def require_verify_twitter
-    unless session[:twitter_access_token]
+    unless linked_with_twitter?
       redirect_to verify_twitter_group_oauth_url(params[:group_id])
       return
     end
@@ -39,7 +41,6 @@ class TwitterFetchersController < ApplicationController
 
   def load_group
     @group = { :name => get_group_name, :picture => "#{Youroom.group_url(params[:group_id])}/picture" }
-
   end
 
   def get_group_name
@@ -53,6 +54,10 @@ class TwitterFetchersController < ApplicationController
       Rails.cache.write(group_name_cache_key, group_name)
       group_name
     end
+  end
+
+  def linked_with_twitter?
+    session[:twitter_access_token]
   end
 
   def group_name_cache_key(group_id = params[:group_id])
