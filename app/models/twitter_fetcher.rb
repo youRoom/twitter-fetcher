@@ -94,9 +94,15 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def get
-    logger.info " >> url: #{url}"
-    logger.info " >> query: #{query.inspect}"
-    @response = Twitter::Request.get(oauth_by_twitter, url, :query => self.query, :format => :json, :headers => {'User-Agent' => USER_AGENT})
+    logger.info " >> type: #{self.setting_option[:type]}"
+    @response =
+      if type?(:keyword)
+        search_client_by_twitter.fetch
+      else
+        client_by_twitter.user_timeline(query)
+      end
+  rescue => e
+    HoptoadNotifier.notify(e)
   end
 
   def items
@@ -111,22 +117,6 @@ class TwitterFetcher < ActiveRecord::Base
     @items = nil
   end
 
-  def url
-    if type?(:keyword)
-      search_api_url
-    else
-      user_api_url
-    end
-  end
-
-  def user
-    self.setting_option[:value]
-  end
-
-  def user_api_url
-    "http://twitter.com/statuses/user_timeline/#{self.user}.json"
-  end
-
   def type?(type)
     type.to_s == self.setting_option[:type]
   end
@@ -135,29 +125,16 @@ class TwitterFetcher < ActiveRecord::Base
     { :q => URI.encode(self.setting_option[:value]) }
   end
 
-  def search_api_url
-    'http://search.twitter.com/search.json'
-  end
-
   def since_query
     if since_id.blank?
-      if self.type?(:keyword)
-        { :rpp => 5 }
-      else
-        { :count => 5 }
-      end
-
+      { :count => 5 }
     else
       { :since_id => self.since_id }
     end
   end
 
   def query
-    if type?(:keyword)
-      since_query.merge(search_query)
-    else
-      since_query
-    end
+    since_query.merge(search_query)
   end
 
   def result_max_id
@@ -217,4 +194,13 @@ class TwitterFetcher < ActiveRecord::Base
     @client_by_twitter ||= Twitter::Base.new(oauth_by_twitter)
   end
 
+  def search_client_by_twitter
+    @search_client_by_twitter ||= Twitter::Search.new(self.setting_option[:value], :user_agent => USER_AGENT)
+    if self.since_id
+      @search_client_by_twitter.since_id = self.since_id
+    else
+      @search_client_by_twitter.rpp(5)
+    end
+    @search_client_by_twitter
+  end
 end
