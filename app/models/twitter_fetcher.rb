@@ -197,7 +197,7 @@ class TwitterFetcher < ActiveRecord::Base
   def search_client_by_twitter
     @search_client_by_twitter ||= Twitter::Search.new(self.setting_option[:value], :user_agent => USER_AGENT)
     if self.since_id
-      @search_client_by_twitter.since_id = self.since_id
+      @search_client_by_twitter.since_id(self.since_id)
     else
       @search_client_by_twitter.rpp(5)
     end
