@@ -99,7 +99,7 @@ class TwitterFetcher < ActiveRecord::Base
       if type?(:keyword)
         search_client_by_twitter.fetch
       else
-        client_by_twitter.user_timeline(query)
+        client_by_twitter.user_timeline(since_query.merge(:screen_name => URI.encode(self.setting_option[:value])))
       end
   rescue => e
     HoptoadNotifier.notify(e)
@@ -121,20 +121,12 @@ class TwitterFetcher < ActiveRecord::Base
     type.to_s == self.setting_option[:type]
   end
 
-  def search_query
-    { :q => URI.encode(self.setting_option[:value]) }
-  end
-
   def since_query
     if since_id.blank?
       { :count => 5 }
     else
       { :since_id => self.since_id }
     end
-  end
-
-  def query
-    since_query.merge(search_query)
   end
 
   def result_max_id
