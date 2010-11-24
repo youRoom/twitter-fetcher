@@ -5,6 +5,7 @@ class TwitterFetcher < ActiveRecord::Base
 
   USER_AGENT = "youRoom twitter fetcher"
   URL_FORMAT = "http://twitter.com/%s/status/%s"
+  @@twitter_ignore_errors = [Twitter::Unavailable, Twitter::NotFound].freeze
 
   attr_accessor :setting_type, :setting_value, :skip_fetching
 
@@ -102,7 +103,9 @@ class TwitterFetcher < ActiveRecord::Base
         client_by_twitter.user_timeline(since_query.merge(:screen_name => URI.encode(self.setting_option[:value])))
       end
   rescue => e
-    HoptoadNotifier.notify(e)
+    unless @@twitter_ignore_errors.any? {|error| e.is_a?(error) }
+      HoptoadNotifier.notify(e)
+    end
   end
 
   def items
