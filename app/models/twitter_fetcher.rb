@@ -72,6 +72,9 @@ class TwitterFetcher < ActiveRecord::Base
       entry = JSON::parse(response.body)['entry']
       self.post_histories.create!(:entry_id => entry['id'], :tweet_id => tweet_id)
       entry
+    else
+      logger.error "[POST Entry to youRoom] Failed to #{response}: #{response.body}"
+      nil
     end
   end
 
@@ -158,7 +161,7 @@ class TwitterFetcher < ActiveRecord::Base
                          entry = post_entry('entry[content]' => "Twitter feeds of #{self.setting_option[:value]} on #{Time.now.strftime('%Y/%m/%d')}",
                                             'entry[attachment_attributes][attachment_type]' => 'twitter',
                                             'entry[attachment_attributes][data][render_default_view]' => true)
-                         entry['id']
+                         entry ? entry['id'] : nil
                        end
   end
 
