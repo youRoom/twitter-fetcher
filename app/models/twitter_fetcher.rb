@@ -27,14 +27,26 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def self.fetch_all
+    errors = []
     self.all.each do |tf|
-      logger.info " >> fetching #{tf.setting_option.inspect} #{tf.attributes.inspect}"
-      items = tf.fetch
-      logger.info " >> items: #{items.size}"
-      entries = tf.create_entries
-      logger.info " >> entries: #{entries.size}"
-      logger.info " >> finished #{tf.setting_option.inspect}"
+      begin
+        logger.info " >> fetching #{tf.setting_option.inspect} #{tf.attributes.inspect}"
+        items = tf.fetch
+        logger.info " >> items: #{items.size}"
+        entries = tf.create_entries
+        logger.info " >> entries: #{entries.size}"
+        logger.info " >> finished #{tf.setting_option.inspect}"
+      rescue => e
+        errors << { :twitter_fetcher => tf, :error => e}
+      end
     end
+    logger.error "-------------FetchAll Error------------"
+    errors.each do |error|
+      logger.error "TF: #{error[:twitter_fetcher].inspect}\nERROR: #{error[:error].inspect}"
+      error[:error].backtrace.each{ |line| logger.error line }
+      logger.error "-" * 20
+    end
+    logger.error "-------------FetchAll Error------------"
   ensure
     logger.flush
   end
