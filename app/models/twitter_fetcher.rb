@@ -7,7 +7,7 @@ class TwitterFetcher < ActiveRecord::Base
   URL_FORMAT = "http://twitter.com/%s/status/%s"
   @@twitter_ignore_errors = [Twitter::Unavailable, Twitter::NotFound].freeze
 
-  attr_accessor :setting_type, :setting_value, :skip_fetching
+  attr_accessor :setting_type, :setting_value, :skip_fetching, :setting_exclude
 
   validates_presence_of :setting_type, :setting_value, :access_token, :access_token_secret
 
@@ -15,7 +15,7 @@ class TwitterFetcher < ActiveRecord::Base
 
   def before_save
     if setting_type and setting_value
-      self.setting_option = { :type => self.setting_type, :value => self.setting_value }
+      self.setting_option = { :type => self.setting_type, :value => self.setting_value, :exclude => self.setting_exclude }
     end
   end
 
@@ -124,11 +124,17 @@ class TwitterFetcher < ActiveRecord::Base
   end
 
   def items
-    @items ||= if @response.is_a?(Hash)
-                 @response["results"]
-               elsif @response.is_a?(Array)
-                 @response
-               end || []
+    return @items if defined?(@items)
+
+    items = if @response.is_a?(Hash)
+              @response["results"]
+            elsif @response.is_a?(Array)
+              @response
+            end || []
+
+    items = items.select{|item| !Regexp.new(self.setting_option[:exclude].split(',').map(&:strip).join('|')).match(item.text) } unless self.setting_option[:exclude].blank?
+
+    @items = items
   end
 
   def clear_items

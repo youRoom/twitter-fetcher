@@ -20,6 +20,8 @@
             %th
               ユーザID / キーワード
             %th
+              除外キーワード
+            %th
         %tbody
           - @fetchers.each do |fetcher|
             %tr
@@ -27,6 +29,8 @@
                 = h fetcher.setting_option[:type]
               %td
                 = h fetcher.setting_option[:value]
+              %td
+                = h fetcher.setting_option[:exclude]
               %td
                 = link_to "削除する", group_twitter_fetcher_path(params[:group_id], fetcher), :method => :delete
 

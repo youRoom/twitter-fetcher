@@ -13,3 +13,10 @@
   %br
   = form.text_field :setting_value
 
+%p
+  = form.label :setting_exclude, "除外キーワード"
+  %span.notice
+    カンマ(,) 区切りで、取り込みから除外したいキーワードを設定できます
+  %br
+  = form.text_field :setting_exclude
+
