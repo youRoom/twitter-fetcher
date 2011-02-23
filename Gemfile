@@ -25,7 +25,6 @@ end
 
 group :test do
   # bundler requires these gems while running tests
-  gem 'sqlite3-ruby', :require => 'sqlite3'
   gem 'rspec', '=1.3.1', :require => nil
   gem 'rspec-rails', '=1.3.3', :require => nil
   gem "spork",       :require => nil
