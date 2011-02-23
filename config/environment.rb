@@ -47,12 +47,4 @@ Rails::Initializer.run do |config|
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
-  config.gem 'haml'
-  config.gem "searchlogic", :version => ">=2.3.8"
-  config.gem 'configatron', :lib => 'configatron'
-  config.gem 'pit', :lib => "pit"
-  config.gem 'twitter', :version => "0.9.12"
-  config.gem "oauth"
-  config.gem "oauth-plugin"
-  config.gem 'hoptoad_notifier'
 end

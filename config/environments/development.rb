@@ -15,21 +15,3 @@ config.action_controller.perform_caching             = false
 
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
-
-config.gem 'sqlite3-ruby', :lib => 'sqlite3'
-#config.gem "josevalim-rails-footnotes",  :lib => "rails-footnotes", :source => "http://gems.github.com"
-config.gem 'bullet', :source => 'http://gemcutter.org'
-
-config.after_initialize do
-  Bullet.enable = true
-#  Bullet.alert = true
-  Bullet.bullet_logger = true
-  Bullet.console = true
-#  Bullet.rails_logger = true
-  Bullet.disable_browser_cache = true
-  begin
-    require 'ruby-growl'
-    Bullet.growl = true
-  rescue MissingSourceFile
-  end
-end
