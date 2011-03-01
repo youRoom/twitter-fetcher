@@ -13,6 +13,7 @@ gem 'twitter', "0.9.12"
 gem "oauth"
 gem "oauth-plugin"
 gem "json"
+gem "whenever", "0.6.2", :require => false
 
 # Devise 1.0.2 is not a valid gem plugin for Rails, so use git until 1.0.3
 # gem 'devise', :git => 'git://github.com/plataformatec/devise.git', :ref => 'v1.0'

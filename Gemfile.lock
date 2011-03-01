@@ -2,6 +2,7 @@ GEM
   remote: http://rubygems.org/
   remote: http://gems.github.com/
   specs:
+    aaronh-chronic (0.3.9)
     actionmailer (2.3.9)
       actionpack (= 2.3.9)
     actionpack (2.3.9)
@@ -64,6 +65,9 @@ GEM
       httparty (~> 0.6.1)
       multi_json (~> 0.0.4)
       oauth (~> 0.4.3)
+    whenever (0.6.2)
+      aaronh-chronic (>= 0.3.9)
+      activesupport (>= 2.3.4)
     yamler (0.1.0)
 
 PLATFORMS
@@ -86,3 +90,4 @@ DEPENDENCIES
   spork
   thin
   twitter (= 0.9.12)
+  whenever (= 0.6.2)
