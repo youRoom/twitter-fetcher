@@ -27,4 +27,4 @@ config.action_view.cache_template_loading            = true
 # Enable threaded mode
 # config.threadsafe!
 
-config.log_path = '/mnt/data/log/rails/twitter-fetcher/production.log'
+config.log_path = '/var/log/rails/twitter-fetcher/production.log'
