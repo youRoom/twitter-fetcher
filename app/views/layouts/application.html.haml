@@ -37,7 +37,7 @@
         .column1
           - if logged_in?
             .account
-              Your account: #{participation_name}
+              Your account: #{h participation_name}
           = yield :footer_content_left
           &nbsp;
         .column2
