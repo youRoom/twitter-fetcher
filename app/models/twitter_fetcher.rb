@@ -5,7 +5,7 @@ class TwitterFetcher < ActiveRecord::Base
 
   USER_AGENT = "youRoom twitter fetcher"
   URL_FORMAT = "http://twitter.com/%s/status/%s"
-  @@twitter_ignore_errors = [Twitter::ServiceUnavailable, Twitter::NotFound].freeze
+  @@twitter_ignore_errors = [Twitter::ServiceUnavailable, Twitter::NotFound, Twitter::Unauthorized].freeze
 
   attr_accessor :setting_type, :setting_value, :skip_fetching, :setting_exclude
 
