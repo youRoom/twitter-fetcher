@@ -5,7 +5,7 @@ class TwitterFetcher < ActiveRecord::Base
 
   USER_AGENT = "youRoom twitter fetcher"
   URL_FORMAT = "http://twitter.com/%s/status/%s"
-  @@twitter_ignore_errors = [Twitter::Unavailable, Twitter::NotFound].freeze
+  @@twitter_ignore_errors = [Twitter::ServiceUnavailable, Twitter::NotFound].freeze
 
   attr_accessor :setting_type, :setting_value, :skip_fetching, :setting_exclude
 
@@ -64,7 +64,7 @@ class TwitterFetcher < ActiveRecord::Base
     ActiveRecord::Base.transaction do
       each_tweet do |content, img_url, name, url, tweet_id|
         body_hash = {
-          'entry[content]' => content,
+          'entry[content]' => CGI.unescapeHTML(content),
           'entry[parent_id]' => parent_topic_id(tweet_id),
           'entry[attachment_attributes][data][user][img_url]' => img_url,
           'entry[attachment_attributes][data][user][name]' => name,
@@ -115,7 +115,7 @@ class TwitterFetcher < ActiveRecord::Base
       if type?(:keyword)
         search_client_by_twitter.fetch
       else
-        client_by_twitter.user_timeline(since_query.merge(:screen_name => URI.encode(self.setting_option[:value])))
+        client_by_twitter.user_timeline(self.setting_option[:value], since_query)
       end
   rescue => e
     unless @@twitter_ignore_errors.any? {|error| e.is_a?(error) }
@@ -200,22 +200,17 @@ class TwitterFetcher < ActiveRecord::Base
     @youroom_consumer ||= OAuth::Consumer.new(configatron.youroom.consumer.key, configatron.youroom.consumer.secret, :site => Youroom.root_url)
   end
 
-  def oauth_by_twitter
-    @oauth_by_twitter ||= Twitter::OAuth.new(configatron.twitter.consumer.key, configatron.twitter.consumer.secret)
-    @oauth_by_twitter.authorize_from_access(self.access_token, self.access_token_secret)
-    @oauth_by_twitter
-  end
-
   def client_by_twitter
-    @client_by_twitter ||= Twitter::Base.new(oauth_by_twitter)
+    @oauth_by_twitter ||= Twitter::Client.new(:oauth_token => self.access_token, :oauth_token_secret => self.access_token_secret)
   end
 
   def search_client_by_twitter
-    @search_client_by_twitter ||= Twitter::Search.new(self.setting_option[:value], :user_agent => USER_AGENT)
+    @search_client_by_twitter ||= Twitter::Search.new
+    @search_client_by_twitter.containing(self.setting_option[:value])
     if self.since_id
       @search_client_by_twitter.since_id(self.since_id)
     else
-      @search_client_by_twitter.rpp(5)
+      @search_client_by_twitter.per_page(5)
     end
     @search_client_by_twitter
   end

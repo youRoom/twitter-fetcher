@@ -9,7 +9,7 @@ gem "searchlogic", ">=2.3.8"
 gem 'configatron', :require => 'configatron'
 gem 'pit', :require => "pit"
 gem 'hoptoad_notifier'
-gem 'twitter', "0.9.12"
+gem 'twitter'
 gem "oauth"
 gem "oauth-plugin"
 gem "json"
