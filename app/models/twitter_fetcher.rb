@@ -30,25 +30,23 @@ class TwitterFetcher < ActiveRecord::Base
     errors = []
     self.all.each do |tf|
       begin
-        logger.info " >> fetching #{tf.setting_option.inspect} #{tf.attributes.inspect}"
+        logger.info "[pid:#{Process.pid}] >> fetching #{tf.setting_option.inspect} #{tf.attributes.inspect}"
         items = tf.fetch
-        logger.info " >> items: #{items.size}"
+        logger.info "[pid:#{Process.pid}] >> items: #{items.size}"
         entries = tf.create_entries
-        logger.info " >> entries: #{entries.size}"
-        logger.info " >> finished #{tf.setting_option.inspect}"
+        logger.info "[pid:#{Process.pid}] >> entries: #{entries.size}"
+        logger.info "[pid:#{Process.pid}] >> finished #{tf.setting_option.inspect}"
       rescue => e
         errors << { :twitter_fetcher => tf, :error => e}
       end
     end
-    logger.error "-------------FetchAll Error------------"
+    logger.error "[pid:#{Process.pid}]-------------FetchAll Error------------"
     errors.each do |error|
       logger.error "TF: #{error[:twitter_fetcher].inspect}\nERROR: #{error[:error].inspect}"
       error[:error].backtrace.each{ |line| logger.error line }
       logger.error "-" * 20
     end
-    logger.error "-------------FetchAll Error------------"
-  ensure
-    logger.flush
+    logger.error "[pid:#{Process.pid}]-------------FetchAll Error------------"
   end
 
   def fetch
