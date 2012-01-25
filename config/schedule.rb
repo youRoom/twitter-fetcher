@@ -21,7 +21,7 @@
 set :job_template, nil
 set :path, "/var/www/twitter-fetcher"
 set :output, "/var/log/rails/twitter-fetcher/batch.log"
-job_type :rake, "cd :path && RAILS_ENV=:environment /usr/bin/env rake :task :output"
+job_type :rake, "cd :path && RAILS_ENV=:environment /usr/bin/env bundle exec rake :task :output"
 job_type :runner,  "cd :path && script/runner -e :environment ':task' :output"
 
 every 15.minutes, :at => 8 do
