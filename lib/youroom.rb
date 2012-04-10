@@ -4,11 +4,11 @@ class Youroom
   end
 
   def self.group_url group_id
-    "#{scheme}://www.#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}/r/#{group_id}"
+    "#{scheme}://#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}/r/#{group_id}"
   end
 
   def self.my_groups_url
-    "#{scheme}://www.#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}/groups/my"
+    "#{scheme}://#{configatron.youroom_url_options[:host]}:#{configatron.youroom_url_options[:port]}/groups/my"
   end
 
   def self.scheme
