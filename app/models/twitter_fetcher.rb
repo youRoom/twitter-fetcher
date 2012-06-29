@@ -28,7 +28,10 @@ class TwitterFetcher < ActiveRecord::Base
 
   def self.fetch_all
     errors = []
-    self.all.each do |tf|
+    logger.info "AllCount: #{self.scoped({}).count}"
+    active = self.scoped(:conditions => { :group_id => self.active_room_ids })
+    logger.info "ActiveoCunt: #{active.count}"
+    active.each do |tf|
       begin
         logger.info "[pid:#{Process.pid}] >> fetching #{tf.setting_option.inspect} #{tf.attributes.inspect}"
         items = tf.fetch
@@ -189,12 +192,23 @@ class TwitterFetcher < ActiveRecord::Base
     end
   end
 
-  private
   def access_token_as_youroom_bot
+    self.class.access_token_as_youroom_bot
+  end
+
+  def self.active_room_ids
+    res = JSON.parse(TwitterFetcher.access_token_as_youroom_bot.get('/groups/my.json').body)
+    res.map{ |group| group["group"]["to_param"].to_i rescue nil }.compact
+  rescue => e
+    logger.error "[Failed to fetch youroom active room]"
+    []
+  end
+
+  def self.access_token_as_youroom_bot
     @access_token_as_youroom_bot ||= OAuth::AccessToken.new(youroom_consumer, configatron.youroom.access_token.key, configatron.youroom.access_token.secret)
   end
 
-  def youroom_consumer
+  def self.youroom_consumer
     @youroom_consumer ||= OAuth::Consumer.new(configatron.youroom.consumer.key, configatron.youroom.consumer.secret, :site => Youroom.root_url)
   end
 
